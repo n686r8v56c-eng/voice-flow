@@ -131,3 +131,12 @@
 .voice-auth-loading{height:100%;display:flex;align-items:center;justify-content:center;color:#81738f;font-size:15px;padding:25px;text-align:center}
 .voice-logout{border-radius:8px;padding:7px 10px;background:#f3ebfa;color:#74539a;font-size:13px;font-weight:600;white-space:nowrap}
 .voice-sync-alert{border:1px solid #dfc5df;border-radius:9px;color:#903f71;padding:10px;font-size:13px;line-height:1.5}
+
+/* Standalone canonical Voice Flow, matched to the embedded Hub training screen */
+.voice-canonical{min-height:100dvh;background:#faf8fd;padding:0 0 max(32px,env(safe-area-inset-bottom))}
+.voice-canonical-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px max(12px,env(safe-area-inset-left));background:#fff;border-bottom:1px solid #ebe3f1}
+.voice-canonical-header strong{display:block;font-size:18px;color:#33283d}
+.voice-canonical-header small{display:block;font-size:11px;color:#9686a8;margin-top:3px}
+.voice-canonical-header a{flex-shrink:0;font-size:12px;color:#7653a3;background:#f2eafb;border-radius:9px;padding:9px 10px;text-decoration:none}
+.voice-canonical>.voice-training,.voice-canonical>.voice-auth,.voice-canonical>.voice-auth-loading{max-width:900px;margin:0 auto}
+@media(max-width:380px){.voice-canonical-header strong{font-size:16px}.voice-canonical-header a{font-size:11px}}
