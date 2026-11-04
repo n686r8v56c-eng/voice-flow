@@ -5,6 +5,7 @@ import{categories,freshData,uid,today,ytId,durationText}from'./data';
 import Modal from './components/Modal';
 import{I}from'./components/Icons';
 import './style.css';
+import VoiceHubTraining from './VoiceHubTraining';
 const tabs=[['home','홈'],['training','훈련'],['reading','낭독실'],['record','녹음실'],['analysis','분석']];
 const identities=['아나운서형','라디오형','강연자형','일상 대화형'];
 function App(){
@@ -65,6 +66,16 @@ function App(){
  return <><div className="shell">{topActions()}<main>{tab==='home'?<Home/>:tab==='training'?<Training/>:tab==='reading'?<Reading/>:tab==='record'?<Recorder/>:<Analysis/>}</main></div><nav className="bottom-nav">{tabs.map(([key,label])=><button key={key} onClick={()=>{setTab(key);window.scrollTo(0,0)}} className={tab===key?'active':''}><I name={key} size={20}/><span>{label}</span></button>)}</nav>{modal?.type==='comparison'?<ComparisonModal/>:modal&&<Form/>}{media&&<YoutubeModal/>}{notice&&<div className="toast" role="status">{notice}</div>}</>;
 }
 function Auth(){const [signup,setSignup]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');async function submit(e){e.preventDefault();setBusy(true);setMsg('');try{if(signup){const{data,error}=await supabase.auth.signUp({email,password});if(error)throw error;setMsg(data.session?'가입 및 로그인 완료':'가입 요청 완료. 이메일 인증 링크를 확인해줘.')}else{const{error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error}}catch(e){setMsg(e.message)}finally{setBusy(false)}}return <div className="auth-screen"><div className="auth-card"><div className="auth-brand">VOICE FLOW <span>♪</span></div><div className="subbrand">Speak clearly. Sound like you.</div><h2>{signup?'회원가입':'로그인'}</h2><form onSubmit={submit}><label className="field">이메일<input autoComplete="email" type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com"/></label><label className="field">비밀번호<input autoComplete={signup?'new-password':'current-password'} type="password" minLength={6} required value={password} onChange={e=>setPassword(e.target.value)} placeholder="6자 이상"/></label><button className="primary full" disabled={busy}>{busy?'처리 중…':signup?'가입하기':'로그인'}</button></form><button className="auth-switch" onClick={()=>{setSignup(!signup);setMsg('')}}>{signup?'이미 계정이 있어요 · 로그인':'계정이 없어요 · 회원가입'}</button>{msg&&<p className="auth-message">{msg}</p>}</div></div>}
-createRoot(document.getElementById('root')).render(<App/>);
+const legacyMode=new URLSearchParams(window.location.search).get('legacy')==='1';
+function CanonicalVoice(){
+ return <div className="voice-canonical">
+  <header className="voice-canonical-header">
+   <div><strong>Voice Flow</strong><small>VOICE TRAINING · 5단계 × 10 Drill</small></div>
+   <a href="?legacy=1">기존 낭독·녹음실 열기</a>
+  </header>
+  <VoiceHubTraining/>
+ </div>;
+}
+createRoot(document.getElementById('root')).render(legacyMode?<App/>:<CanonicalVoice/>);
 
 import './mobile-readability.css';
