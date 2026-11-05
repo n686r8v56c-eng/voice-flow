@@ -1,4 +1,5 @@
 import {createClient} from '@supabase/supabase-js';
+const sameSnapshot=(a,b)=>{const order=x=>Array.isArray(x)?x.map(order):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,order(x[k])])):x;return JSON.stringify(order(a))===JSON.stringify(order(b))};
 const url=import.meta.env.VITE_SUPABASE_URL;
 const key=import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const configured=Boolean(url&&key&&!url.includes('YOUR_PROJECT'));
@@ -7,7 +8,7 @@ export async function fetchData(userId){const {data,error}=await supabase.from('
 export async function pushData(userId,payload,expected){
  const {data:current,error:readError}=await supabase.from('voice_flow_data').select('payload').eq('user_id',userId).maybeSingle();
  if(readError)throw readError;
- if(JSON.stringify(current?.payload??null)!==JSON.stringify(expected??null)){
+ if(!sameSnapshot(current?.payload??null,expected??null)){
   const error=Error('다른 기기에서 수정한 데이터가 있어 덮어쓰지 않았어.');
   error.code='VOICE_CONFLICT';throw error;
  }
